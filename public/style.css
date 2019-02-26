@@ -1,0 +1,30 @@
+
+html{
+	font-family: "Arial";
+	background-color: #00ffed;
+}
+
+h3{
+	color: green;
+}
+
+p{
+	color: red;
+}
+
+button{
+	border-radius: 50px;
+	border: none;
+	background-color: blue;
+}
+
+input{
+	border-radius: 50px;
+	border: none;
+}
+
+div{
+	border: 3px solid purple;
+	margin-top:5px;
+	margin-bottom:5px;
+}
