@@ -12,48 +12,61 @@ const shoppingCart = {
 		<input ng-model="$ctrl.quantity" type="textbox" placeholder="how many">
 		<button ng-click="$ctrl.Post($ctrl.product, $ctrl.price, $ctrl.quantity)">Add</button>
 		
-		<h3>Edit list here</h3>
-		<input ng-model="$ctrl.product2" type="textbox" placeholder="product name">
-		<input ng-model="$ctrl.price2" type="textbox" placeholder="price">
-		<input ng-model="$ctrl.quantity2" type="textbox" placeholder="how many">
-		<input ng-model="$ctrl.id2" type="textbox" placeholder="id of current item">
-		<button ng-click="$ctrl.Put($ctrl.product2, $ctrl.price2, $ctrl.quantity2, $ctrl.id2)">Edit</button>
-		
 		<h3>Delete item</h3>
 		<input ng-model="$ctrl.id3" type="textbox" placeholder="id of item">
 		<button ng-click="$ctrl.Delete($ctrl.id3)">Delete</button>
 		
-		<div ng-repeat="item in $ctrl.Arr">
+		<div ng-repeat="item in $ctrl.Arr | orderBy: item.product">
 		
 			<p>product: {{item.product}}</p>
 			<p>price: {{item.price}}</p>
 			<p>quantity: {{item.quantity}}</p>
+		<button ng-click="$ctrl.Put(item.product, item.quantity, true)">+</button>
+		<button ng-click="$ctrl.Put(item.product, item.quantity, false)">-</button>
 			<p>id: {{item.id}}</p>
-		
 		</div>
 	
 	`,
 	
 	controller: ["CartService", function(CartService){
 		
+		CartService.Get().then((response) => {
+			this.Arr = response.data;
+		});
+		
 		this.Get = function(){
 			CartService.Get().then((response) => {
-				this.Arr = response.data;			
+				this.Arr = response.data;
 			});
 		}
 		
 		this.Post = function(product, price, quantity){
-			CartService.Post(product, price, quantity);
-			this.Get();
+			
+			CartService.Post(product, price, quantity).then((response) => {
+			});
+			
+			CartService.Get().then((response) => {
+				this.Arr = response.data;
+			});
 			
 			this.product = "";
 			this.price = "";
 			this.quantity = "";
 		}
 		
-		this.Put = function(product, price, quantity, id){
-			CartService.Put(product, price, quantity, id);
-			this.Get();
+		this.Put = function(product, quantity, add){
+			
+			if(add){
+				CartService.Put(product, Number(quantity)+1);
+			}else{
+				if(Number(quantity)){
+					CartService.Put(product, Number(quantity)-1);
+				}
+			}
+			
+			CartService.Get().then((response) => {
+				this.Arr = response.data;
+			});
 			
 			this.product2 = "";
 			this.price2 = "";
@@ -63,7 +76,10 @@ const shoppingCart = {
 		
 		this.Delete = function(id){
 			CartService.Delete(id);
-			this.Get();			
+			this.id3 = "";
+			CartService.Get().then((response) => {
+				this.Arr = response.data;
+			});		
 		}
 		
 	}]
