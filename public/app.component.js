@@ -16,7 +16,7 @@ const shoppingCart = {
 		<input ng-model="$ctrl.id3" type="textbox" placeholder="id of item">
 		<button ng-click="$ctrl.Delete($ctrl.id3)">Delete</button>
 		
-		<div ng-repeat="item in $ctrl.Arr | orderBy: item.product">
+		<div ng-repeat="item in $ctrl.Arr | orderBy: 'product'">
 		
 			<p>product: {{item.product}}</p>
 			<p>price: {{item.price}}</p>
